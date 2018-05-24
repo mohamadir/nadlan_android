@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Nadlan Project</string>
+    <string-array name="countries_arr">
+        <item>ישראל</item>
+        <item>ירדן</item>
+    </string-array>
+</resources>

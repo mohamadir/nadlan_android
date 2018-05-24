@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:camomile="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreenActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_text"/>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/msg_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="Write a message"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:textColorHint="#c7c7c7"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+
+        <com.gmail.samehadar.iosdialog.CamomileSpinner
+            android:id="@+id/spinner2"
+            camomile:duration="30"
+            camomile:clockwise="false"
+            camomile:spinnerColor="#ffffff"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="המתן..."/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "731023010239",
+    "firebase_url": "https://nadlan-tech.firebaseio.com",
+    "project_id": "nadlan-tech",
+    "storage_bucket": "nadlan-tech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731023010239:android:8002f5ab3b0e5f42",
+        "android_client_info": {
+          "package_name": "tech.nadlan.com.nadlanproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731023010239-0mg3riimt26174i2a9nr35kmust16svk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.nadlan.com.nadlanproject",
+            "certificate_hash": "3fe15a448629d6d03ff3e3b1e8397e1e1e2bb5ec"
+          }
+        },
+        {
+          "client_id": "731023010239-ml09dnldk80vml8v3k66ldt6voft7ngl.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "731023010239-ml09dnldk80vml8v3k66ldt6voft7ngl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnC7Kffw6-E-GXw9UhvQjK1zkTplx0EdQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731023010239-ml09dnldk80vml8v3k66ldt6voft7ngl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
