@@ -24,7 +24,9 @@ public class User {
         this.password = password;
         this.phone = phone;
     }
+    public User(){
 
+    }
     public String getId() {
         return id;
     }

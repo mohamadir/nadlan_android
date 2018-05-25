@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/bg"
     tools:context="tech.nadlan.com.nadlanproject.LoginActivity">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/logo_text"></ImageView>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
     <TextView
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -28,7 +38,7 @@
         app:cardCornerRadius="0dp">
 
         <EditText
-            android:id="@+id/msg_box"
+            android:id="@+id/username_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -53,7 +63,7 @@
         app:cardCornerRadius="0dp">
 
         <EditText
-            android:id="@+id/msg_box"
+            android:id="@+id/password_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -128,5 +138,5 @@
         android:textColor="@color/DarkSlateBlue"
         android:layout_marginTop="15dp"
         android:text="שכחת סיסמה?"/>
-
 </LinearLayout>
+</RelativeLayout>

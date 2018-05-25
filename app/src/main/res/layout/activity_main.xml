@@ -10,8 +10,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:visibility="invisible"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/logo_text"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -72,11 +71,7 @@
 
         </RelativeLayout>
     </RelativeLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sdfsdfsdf"
-        android:textColor="@color/black"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center"

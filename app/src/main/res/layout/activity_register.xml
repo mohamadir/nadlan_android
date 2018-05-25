@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg"
     tools:context="tech.nadlan.com.nadlanproject.RegisterActivity">
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progress"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <ImageView
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -86,7 +97,7 @@
                 app:cardElevation="7dp">
 
                 <EditText
-                    android:id="@+id/msg_box"
+                    android:id="@+id/username_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -113,7 +124,8 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/msg_box"
+                android:id="@+id/password_et"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -138,7 +150,7 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/msg_box"
+                android:id="@+id/email_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -192,7 +204,7 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/msg_box"
+                android:id="@+id/phone_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -207,9 +219,9 @@
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
-            android:layout_width="250dp"
+            android:layout_width="150dp"
             android:layout_height="40dp"
-            app:cardElevation="7dp"
+            app:cardElevation="12dp"
             android:background="#fff"
             app:cardBackgroundColor="#fff"
             android:visibility="visible"
@@ -221,9 +233,9 @@
               android:onClick="register"
               android:layout_height="match_parent"
               android:background="@color/proswipebtn_translucent_white"
-              android:text="REGISTER"/>
+              android:text="הרשמה"/>
 
         </android.support.v7.widget.CardView>
     </LinearLayout>
-
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
