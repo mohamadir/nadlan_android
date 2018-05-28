@@ -25,6 +25,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.nightonke.boommenu.BoomMenuButton;
 
 import java.util.Calendar;
 
@@ -33,47 +39,60 @@ import in.shadowfax.proswipebutton.ProSwipeButton;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private TextView timeMessageTv;
     TextView userNameTv;
+    FirebaseUser currentUser;
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            Classes.isLogged = true;
+            DatabaseReference userTable = FirebaseDatabase.getInstance().getReference("users");
+            userTable.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                        if (userSnapShot.getKey().equals(mAuth.getUid())) {
+                            User user = userSnapShot.getValue(User.class);
+                            Classes.currentUser = user;
+                            userNameTv.setText(Classes.currentUser.getUsername());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            updateUi();
+        }
+        else {
+            userNameTv.setText("משתמש יקר");
+
+        }
 
     }
+
+    private void updateUi() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final ProSwipeButton proSwipeBtn = (ProSwipeButton) findViewById(R.id.awesome_btn);
         userNameTv = (TextView)findViewById(R.id.userNameTv);
+        timeMessageTv = (TextView)findViewById(R.id.timeMessageTv);
         setUserName();
         proSwipeBtn.setText("החלק כדי להיכנס");
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.createUserWithEmailAndPassword("abdalhadi6@gmail.com", "123456")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("fb-mauth", "createUserWithEmail:success "+ mAuth.getCurrentUser());
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.d("fb-mauth", "createUserWithEmail:failure1", task.getException());
-
-                        }
-
-                        // ...
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("fb-mauth", "createUserWithEmail:failure2"+  e.getMessage().toString());
-
-            }
-        });
         proSwipeBtn.showResultIcon(false);
         setTimeMessage();
         proSwipeBtn.setOnSwipeListener(new ProSwipeButton.OnSwipeListener() {
@@ -132,6 +151,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void addUser(){
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -151,13 +175,13 @@ public class MainActivity extends AppCompatActivity {
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
         if(timeOfDay >= 0 && timeOfDay < 12){
-            Toast.makeText(this, "Good Morning", Toast.LENGTH_SHORT).show();
+            timeMessageTv.setText("בוקר טוב");
         }else if(timeOfDay >= 12 && timeOfDay < 16){
-            Toast.makeText(this, "Good Afternoon", Toast.LENGTH_SHORT).show();
+            timeMessageTv.setText("צהריים טובים");
         }else if(timeOfDay >= 16 && timeOfDay < 21){
-            Toast.makeText(this, "Good Evening", Toast.LENGTH_SHORT).show();
+            timeMessageTv.setText("ערב טוב");
         }else if(timeOfDay >= 21 && timeOfDay < 24){
-            Toast.makeText(this, "Good Night", Toast.LENGTH_SHORT).show();
+            timeMessageTv.setText("לילה טוב");
         }
     }
 

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "731023010239-vendfut90ufdtmg981l6nvp6hsd1nh5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.nadlan.com.nadlanproject",
+            "certificate_hash": "fffce12c3cde259a5fe2a4bd7516afbca90bb993"
+          }
+        },
+        {
           "client_id": "731023010239-0mg3riimt26174i2a9nr35kmust16svk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

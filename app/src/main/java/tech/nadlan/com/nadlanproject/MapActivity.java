@@ -36,14 +36,26 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -53,11 +65,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static final String TAG = "DASHBOARD_MAP";
     public GoogleMap mMap;
     String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
@@ -66,13 +79,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     List<Address> lstAdresses;
     public String textSearch = "";
     static final int MAX_RESULT=5;
+    public List<RentPoint> pointList;
     StorageReference storage = FirebaseStorage.getInstance().getReference();
     ImageView imageview;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         checkPlayServices();
+        pointList = new ArrayList<RentPoint>();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
         }else
@@ -118,6 +136,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
 
     }
 
@@ -140,6 +159,63 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     protected void onStart() {
         super.onStart();
+        final DatabaseReference points = FirebaseDatabase.getInstance().getReference("rent_points").child("emrQ0fT3PuPnCqClvLxEC46ydZc2").getRef();
+        points.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                        RentPoint point = userSnapShot.getValue(RentPoint.class);
+                        pointList.add(point);
+                        Log.i("RentPoint",point.getLat()+"");
+                }
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                    for(int i=0; i< pointList.size(); i++) {
+                        LatLng coordinate = new LatLng(pointList.get(i).getLat(), pointList.get(i).getLon());
+                        builder.include(coordinate);
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(coordinate)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.apartment_icon))
+                                .title(pointList.get(i).getAddress()));
+
+                    }
+                LatLngBounds bounds = builder.build();
+                final CameraUpdate cu;
+                cu = CameraUpdateFactory.newLatLngBounds(bounds, 300);
+                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+
+                        try {
+                            mMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                                @Override
+                                public void onFinish() {
+
+                                }
+                                @Override
+                                public void onCancel() {
+
+                                }
+                            });
+                        }catch (Exception e){
+
+                        }
+
+
+                    }
+                });
+
+                //          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(computeCentroid(coordList), (float)9));
+                mMap.setBuildingsEnabled(true);
+                mMap.setIndoorEnabled(true);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             // do your stuff
@@ -186,5 +262,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        for(RentPoint rp: pointList) {
+            if (marker.getPosition().latitude == rp.getLat() && marker.getPosition().longitude == rp.getLon()){
+
+            }
+
+        }
+        return true;
     }
 }

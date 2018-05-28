@@ -11,7 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.asksira.dropdownview.DropDownView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,48 +57,60 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userTable.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersList.clear();
-                for( DataSnapshot userSnapShot: dataSnapshot.getChildren()){
-                    User user = userSnapShot.getValue(User.class);
-                    usersList.add(user);
-                }
-            }
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
     public void register(View view) {
-        String userName = userNameEt.getText().toString();
-        String email = emailEt.getText().toString();
+        final String userName = userNameEt.getText().toString();
+        final String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
-        String phone = phoneEt.getText().toString();
+        final String phone = phoneEt.getText().toString();
         if(userName.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() ){
             Toast.makeText(this, "נא למלא את כל השדות חובה", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!canRegister(userName,email))
-        {
-            Toast.makeText(this, "שם משתמש או דואר אלקטרוני קיימים", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if ( password.toString().length() < 6){
-            Toast.makeText(this, "סיסמה חייבת להכיל לפחות 6 אותיות", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-        String id = userTable.push().getKey();
-        User user = new User(id,userName,email,password,phone);
-        userTable.child(id).setValue(user);
-        Classes.currentUser = user;
-        successHandle();
+                        if (task.isSuccessful()) {
+
+                            User user = new User(
+                                    userName,
+                                    phone
+                            );
+
+                            FirebaseDatabase.getInstance().getReference("users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        successHandle();
+                                    } else {
+                                        //display a failure message
+                                        Toast.makeText(RegisterActivity.this,"SUCCESS FAILED ", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(RegisterActivity.this,"SUCCESS FAILED", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
+
+//        String id = userTable.push().getKey();
+//        User user = new User(id,userName,email,password,phone);
+//        userTable.child(id).setValue(user);
+//        Classes.currentUser = user;
+//        successHandle();
 
 
     }
@@ -112,9 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
-                            onBackPressed();
-
+                            startActivity(new Intent(RegisterActivity.this,MapActivity.class));
                         }
                     });
                 } catch (InterruptedException e) {
@@ -125,9 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public Boolean canRegister(String userName, String email ){
-        for(User user : usersList){
-            if (user.getEmail().toString().equals(email) || user.getUsername().toString().equals(userName)) return false;
-        }
+
         return true;
     }
 

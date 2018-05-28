@@ -18,4 +18,12 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <array name="icons">
+        <item>@drawable/add_apartment</item>
+        <item>@drawable/phone</item>
+    </array>
+    <array name="colors">
+        <item>@android:color/holo_blue_light</item>
+        <item>@android:color/holo_green_dark</item>
+    </array>
 </resources>

@@ -162,6 +162,7 @@
                 android:hint="דואר אלקטרוני"
                 android:paddingLeft="5dp"
                 android:backgroundTint="@android:color/transparent"
+                android:inputType="textEmailAddress"
                 android:paddingStart="5dp"
                 android:textColorHint="#aaa"
                 android:elevation="0dp"
@@ -218,6 +219,7 @@
                 android:backgroundTint="@android:color/transparent"
                 android:paddingStart="5dp"
                 android:textColorHint="#aaa"
+                android:inputType="number"
                 android:elevation="0dp"
                 android:gravity="right"
                 android:textSize="15dp" />
