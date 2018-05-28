@@ -10,6 +10,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:onClick="testClick"
         android:src="@drawable/logo_text"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:text="ניר"
                 android:textSize="30dp"
+                android:id="@+id/userNameTv"
                 android:textStyle="bold"
                 android:textColor="#000"
                 android:layout_height="wrap_content" />    </LinearLayout>

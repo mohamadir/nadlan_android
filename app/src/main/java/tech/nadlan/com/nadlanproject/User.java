@@ -16,7 +16,6 @@ public class User {
     public String password;
     public String phone;
 
-
     public User(String id, String username, String email, String password, String phone) {
         this.id = id;
         this.username = username;

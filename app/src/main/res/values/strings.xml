@@ -1,7 +1,21 @@
 <resources>
-    <string name="app_name">Nadlan Project</string>
+    <string name="app_name">Nadlan</string>
     <string-array name="countries_arr">
         <item>ישראל</item>
         <item>ירדן</item>
     </string-array>
+    <string name="title_activity_dashboard">Sign in</string>
+    <string name="google_maps_API_key">AIzaSyBEeQvjvz5SeeMfSHmDElKc1yiasDEECno</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -78,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
             if (user.getUsername().toString().equals(userName) &&  user.getPassword().toString().equals(password))
             {
                 Toast.makeText(this, "הכניסה הצליחה", Toast.LENGTH_SHORT).show();
+                Classes.currentUser = user;
+                Classes.saveToShp(this);
+                startActivity(new Intent(LoginActivity.this,MapActivity.class));
                 return;
             }
         }

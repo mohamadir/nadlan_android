@@ -102,13 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void successHandle() {
         Toast.makeText(RegisterActivity.this, "נרשמת בהצלחה", Toast.LENGTH_SHORT).show();
         findViewById(R.id.progress).setVisibility(View.VISIBLE);
-        SharedPreferences.Editor editor = getSharedPreferences("user_pref", MODE_PRIVATE).edit();
-        editor.putBoolean("isLogged", true);
-        editor.putString("email", Classes.currentUser.email);
-        editor.putString("phone", Classes.currentUser.phone);
-        editor.putString("username", Classes.currentUser.username);
-        editor.putString("id", Classes.currentUser.id);
-        editor.commit();
+        Classes.saveToShp(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
