@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="30"
+    android:background="@drawable/bg"
+    android:layout_height="match_parent"
+    tools:context="tech.nadlan.com.nadlanproject.AddRentPointActivity">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:src="@drawable/logo_text"></ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_alignParentTop="true"
+        android:text="הוספת נקודה חדשה"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+     />
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_weight="18"
+    android:layout_height="0dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="40dp"
+            android:weightSum="30"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:layoutDirection="rtl"
+            android:layout_height="wrap_content">
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/typeSpinner"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_gravity="right"
+                android:layout_weight="15"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+
+                app:arrowTint="@color/dark_gray"
+                android:layoutDirection="rtl"
+                android:textColor="@color/dark_gray"
+                android:text="סוג"
+                />
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                app:cardElevation="7dp"
+                android:layout_weight="15"
+                android:background="#fff"
+                app:cardBackgroundColor="#fff"
+                android:visibility="visible"
+                app:cardCornerRadius="0dp">
+
+                <EditText
+                    android:id="@+id/username_et"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:hint="שטח במטרים"
+
+                    android:paddingLeft="5dp"
+                    android:inputType="numberDecimal"
+                    android:backgroundTint="@android:color/transparent"
+                    android:paddingStart="5dp"
+                    android:textColorHint="#aaa"
+                    android:elevation="0dp"
+                    android:gravity="right"
+                    android:textSize="15dp" />
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="40dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="עיר"
+                android:paddingLeft="5dp"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="40dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="כתובת"
+                android:paddingLeft="5dp"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="40dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="איש קשר"
+                android:paddingLeft="5dp"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="40dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="מספר טלפון"
+                android:paddingLeft="5dp"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="200dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:hint="הערות"
+                android:paddingLeft="5dp"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+           android:orientation="vertical"
+            android:layout_gravity="center"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="הוסף תמונה"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:src="@drawable/image_place_holder"
+                android:layout_height="100dp" />
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>
+    <Button
+        android:layout_width="100dp"
+        android:id="@+id/signBt"
+        android:layout_height="30dp"
+        android:textColor="@color/white"
+        android:text="הוסף"
+        android:textSize="20dp"
+        android:layout_margin="30dp"
+        android:layout_gravity="center"
+        android:background="@color/green"
+        android:layout_marginTop="15dp"
+        />
+</LinearLayout>

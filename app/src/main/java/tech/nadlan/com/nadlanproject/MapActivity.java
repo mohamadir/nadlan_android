@@ -29,6 +29,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -46,8 +47,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,9 +62,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kosalgeek.android.photoutil.GalleryPhoto;
 import com.shitij.goyal.slidebutton.Utils;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,6 +76,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static final String TAG = "DASHBOARD_MAP";
@@ -82,6 +97,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public List<RentPoint> pointList;
     StorageReference storage = FirebaseStorage.getInstance().getReference();
     ImageView imageview;
+    public static GalleryPhoto galleryPhoto;
 
 
 
@@ -90,6 +106,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         checkPlayServices();
+        galleryPhoto = new GalleryPhoto(MapActivity.this);
         pointList = new ArrayList<RentPoint>();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -139,6 +156,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(this);
 
     }
+    public static final int GALLERY_REQUEST = 22131;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void uploadImage(View view) {
@@ -147,10 +165,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         }else {
-             Intent intent = new Intent();
-             intent.setType("image/*");
-             intent.setAction(Intent.ACTION_GET_CONTENT);
-             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 113);
+//             Intent intent = new Intent();
+//             intent.setType("image/*");
+//             intent.setAction(Intent.ACTION_GET_CONTENT);
+//             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 113);
+            startActivityForResult(galleryPhoto.openGalleryIntent(), GALLERY_REQUEST);
 
          }
     }
@@ -232,36 +251,217 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 113 && resultCode == RESULT_OK
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK
                 && null != data) {
             if (data == null) {
                 return;
             }
             try {
-                Uri uri = data.getData();
-                final StorageReference filepath = storage.child("Photos").child(uri.getLastPathSegment());
-                filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+               final  Uri uri = data.getData();
 
-                        Log.i(TAG,filepath.getDownloadUrl().getResult().getPath());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                final ProgressDialog progress;
+                progress = new ProgressDialog(MapActivity.this);
+                progress.setMessage("מעלה תמונה..");
+
+                progress.show();
+                Thread t = new Thread(new Runnable() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void run() {
+
+                        try {
+
+                            galleryPhoto.setPhotoUri(uri);
+                            String photoPath = galleryPhoto.getPath();;
+
+                            // Log.i("ResultAccount",photoPath);
+
+                            File f = new File(photoPath);
+                            String content_type = getMimeType(f.getPath().replaceAll(" ", "%20"));
+
+                            String file_path = f.getAbsolutePath().replaceAll(" ", "").toString();
+                            Log.i("ResultAccount", "myfiles - " + file_path);
+
+                            OkHttpClient client = new OkHttpClient();
+                            RequestBody file_body = RequestBody.create(MediaType.parse(content_type), f);
+
+                            RequestBody request_body = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("type", content_type)
+                                    .addFormDataPart("single_image", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
+                                    .build();
+                            String id_user2 = "74";
+
+                            Request request = new Request.Builder()
+                                    .url("https://dev.snapgroup.co.il/api/upload_single_image/Member/20/gallery")
+                                    .post(request_body)
+                                    .build();
+
+                            try {
+                                Response response = client.newCall(request).execute();
+                                String jsonData = response.body().string();
+                                JSONObject Jobject = new JSONObject(jsonData);
+                                JSONObject imageObj=Jobject.getJSONObject("image");
+                                String imageUrl= imageObj.getString("path");
+
+                                Log.i(TAG,"upload image success "+ "https://dev.snapgroup.co.il"+imageUrl);
+                                if (!response.isSuccessful()) {
+                                    throw new IOException("Error : " + response);
+                                }
+
+                                progress.dismiss();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.i("ResultAccount", e.getMessage());
+
+                            }
+                       /* SharedPreferences.Editor edit = getSharedPreferences("filesRequestSP", MODE_PRIVATE).edit();
+                        edit.putString("finish", "Yes");
+                        edit.commit();*/
+                            //TODO
+
+
+                        } catch (Exception e) {
+                            progress.dismiss();
+                            Log.i("ResultAccount", "second catch " + e.getMessage());
+                            final String message = e.getMessage().toString().replaceAll(" ", "").replaceAll("\n", "");
+                            if (progress != null) {
+                                progress.dismiss();
+                                MapActivity.this.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(MapActivity.this, "Cannot upload\n Please trye another file!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+                        finish();
+                        startActivity(getIntent());
 
                     }
+
                 });
-                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                imageview.setImageBitmap(bitmap);
 
 
-            } catch (FileNotFoundException e) {
+                t.start();
+
+//                final StorageReference filepath = storage.child("Photos").child(uri.getLastPathSegment());
+//                filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                        Toast.makeText(MapActivity.this, "Success upload ", Toast.LENGTH_SHORT).show();
+////                        Log.i(TAG,taskSnapshot.getdown);
+//                    }
+//                }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MapActivity.this, "Failed upload "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+//                        Log.i(TAG,e.getMessage().toString());
+//
+//                    }
+//                });
+//
+//                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                imageview.setImageBitmap(bitmap);
+
+
+            } catch (Exception e) {
                 Log.i(TAG,e.getMessage());
                 e.printStackTrace();
             }
         }
+    }
+
+    public void uploadImage(final Uri uri){
+        final ProgressDialog progress;
+        progress = new ProgressDialog(MapActivity.this);
+        progress.setMessage("מעלה תמונה..");
+
+        progress.show();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    String photoPath = uri.getPath();
+                    // Log.i("ResultAccount",photoPath);
+
+                    File f = new File(photoPath);
+                    String content_type = getMimeType(f.getPath().replaceAll(" ", "%20"));
+
+                    String file_path = f.getAbsolutePath().replaceAll(" ", "").toString();
+                    Log.i("ResultAccount", "myfiles - " + file_path);
+
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody file_body = RequestBody.create(MediaType.parse(content_type), f);
+
+                    RequestBody request_body = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("type", content_type)
+                            .addFormDataPart("file", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
+                            .build();
+                    String id_user2 = "74";
+
+                    Request request = new Request.Builder()
+                            .url("https://api.snapgroup.co.il/api/upload/" + id_user2)
+                            .post(request_body)
+                            .build();
+
+                    try {
+                        Response response = client.newCall(request).execute();
+                        Log.i(TAG,"upload image success "+response.toString());
+                        if (!response.isSuccessful()) {
+                            throw new IOException("Error : " + response);
+                        }
+
+                        progress.dismiss();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.i("ResultAccount", e.getMessage());
+
+                    }
+                       /* SharedPreferences.Editor edit = getSharedPreferences("filesRequestSP", MODE_PRIVATE).edit();
+                        edit.putString("finish", "Yes");
+                        edit.commit();*/
+                    //TODO
+
+
+                } catch (Exception e) {
+                    progress.dismiss();
+                    Log.i("ResultAccount", "second catch " + e.getMessage());
+                    final String message = e.getMessage().toString().replaceAll(" ", "").replaceAll("\n", "");
+                    if (progress != null) {
+                        progress.dismiss();
+                        MapActivity.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(MapActivity.this, "Cannot upload\n Please trye another file!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+                finish();
+                startActivity(getIntent());
+
+            }
+
+        });
+
+
+        t.start();
+    }
+    private String getMimeType(String path) {
+
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
     @Override
@@ -273,5 +473,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         }
         return true;
+    }
+
+    public void addNewPointActivity(View view) {
+    startActivity(new Intent(MapActivity.this,AddRentPointActivity.class));
     }
 }
