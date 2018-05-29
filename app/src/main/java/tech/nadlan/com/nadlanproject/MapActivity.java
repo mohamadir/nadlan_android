@@ -18,6 +18,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -36,6 +37,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,7 +106,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     StorageReference storage = FirebaseStorage.getInstance().getReference();
     ImageView imageview;
     public static GalleryPhoto galleryPhoto;
-
+    SearchView searchView;
 
 
     @Override
@@ -116,6 +118,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         pointList = new ArrayList<RentPoint>();
         titleEt = (TextView)findViewById(R.id.details_title_Tv);
         descEt = (TextView)findViewById(R.id.details_desc_Tv);
+        searchView = (SearchView)findViewById(R.id.actv_map);
+        searchView.setIconifiedByDefault(false);
+        searchView.onActionViewExpanded();
+        searchView.setIconified(false);
+        searchView.setQueryHint("חפש דירה (למשל: ירושלים)");
+        searchView.requestFocus();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run() {
+                searchView.clearFocus();
+            }
+        }, 300);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
         }else
@@ -132,6 +147,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run() {
+                searchView.clearFocus();
+            }
+        }, 300);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run() {
+                searchView.clearFocus();
+            }
+        }, 300);
+    }
 
     Dialog errorDialog;
 
@@ -203,7 +241,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         builder.include(coordinate);
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                 .position(coordinate)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.apartment_icon))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.aparttment))
                                 .title(pointList.get(i).getAddress()));
 
                     }
