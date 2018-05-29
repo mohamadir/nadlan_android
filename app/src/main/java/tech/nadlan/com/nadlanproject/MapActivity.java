@@ -28,11 +28,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -64,6 +68,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
 import com.shitij.goyal.slidebutton.Utils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -94,6 +99,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     List<Address> lstAdresses;
     public String textSearch = "";
     static final int MAX_RESULT=5;
+    public TextView titleEt,descEt;
     public List<RentPoint> pointList;
     StorageReference storage = FirebaseStorage.getInstance().getReference();
     ImageView imageview;
@@ -108,6 +114,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         checkPlayServices();
         galleryPhoto = new GalleryPhoto(MapActivity.this);
         pointList = new ArrayList<RentPoint>();
+        titleEt = (TextView)findViewById(R.id.details_title_Tv);
+        descEt = (TextView)findViewById(R.id.details_desc_Tv);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
         }else
@@ -187,9 +195,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         pointList.add(point);
                         Log.i("RentPoint",point.getLat()+"");
                 }
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                    for(int i=0; i< pointList.size(); i++) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                if(pointList.size()!=0) {
+                    for (int i = 0; i < pointList.size(); i++) {
                         LatLng coordinate = new LatLng(pointList.get(i).getLat(), pointList.get(i).getLon());
                         builder.include(coordinate);
                         Marker marker = mMap.addMarker(new MarkerOptions()
@@ -198,32 +207,33 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 .title(pointList.get(i).getAddress()));
 
                     }
-                LatLngBounds bounds = builder.build();
-                final CameraUpdate cu;
-                cu = CameraUpdateFactory.newLatLngBounds(bounds, 300);
-                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
+                    LatLngBounds bounds = builder.build();
+                    final CameraUpdate cu;
+                    cu = CameraUpdateFactory.newLatLngBounds(bounds, 300);
+                    mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
 
-                        try {
-                            mMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
-                                @Override
-                                public void onFinish() {
+                            try {
+                                mMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                                    @Override
+                                    public void onFinish() {
 
-                                }
-                                @Override
-                                public void onCancel() {
+                                    }
 
-                                }
-                            });
-                        }catch (Exception e){
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                });
+                            } catch (Exception e) {
+
+                            }
+
 
                         }
-
-
-                    }
-                });
-
+                    });
+                }
                 //          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(computeCentroid(coordList), (float)9));
                 mMap.setBuildingsEnabled(true);
                 mMap.setIndoorEnabled(true);
@@ -246,6 +256,39 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void onBackPressed() {
+        showLeaveDialog();
+    }
+    public void showLeaveDialog() {
+
+        View closeDialog = LayoutInflater.from(MapActivity.this).inflate(R.layout.close_app_layout, null);
+        final Button closeBt = (Button) closeDialog.findViewById(R.id.closeBt);
+        final Button cancelBt = (Button) closeDialog.findViewById(R.id.cancelBt);
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setView(closeDialog);
+
+        final android.support.v7.app.AlertDialog dialog4 = builder.create();
+        dialog4.show();
+        closeBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog4.dismiss();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        cancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog4.dismiss();
+            }
+        });
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -468,7 +511,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public boolean onMarkerClick(Marker marker) {
         for(RentPoint rp: pointList) {
             if (marker.getPosition().latitude == rp.getLat() && marker.getPosition().longitude == rp.getLon()){
+                findViewById(R.id.pointDetailCard).setVisibility(View.VISIBLE);
+                if(rp.getPhotoPath()!=null && !rp.getPhotoPath().equals("")) {
+                    Log.i(Classes.TAG, ""+rp.getPhotoPath());
+                        titleEt.setText(rp.getType() + " " + rp.getArea() +" מ\"ר" +", "+rp.getEstablishYear());
+                        descEt.setText(rp.getAddress() +", "+rp.getCity());
+                        Picasso.with(this).load(rp.getPhotoPath()).into(imageview);
+                        Log.i(Classes.TAG,  rp.getPhotoPath());
 
+                    return true;
+                }
             }
 
         }
@@ -477,5 +529,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     public void addNewPointActivity(View view) {
     startActivity(new Intent(MapActivity.this,AddRentPointActivity.class));
+    }
+
+    public void closeDetails(View view) {
+        findViewById(R.id.pointDetailCard).setVisibility(View.GONE);
+
     }
 }

@@ -3,6 +3,7 @@ package tech.nadlan.com.nadlanproject;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -10,6 +11,14 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 
 public class Classes {
+    public static final String TAG = "MOHAMED-LOG";
+    public static final int GALLERY_REQUEST = 22131;
+    public static final String TYPE_APARTMENT = "דירה";
+    public static final String TYPE_LAND = "מגרש";
+    public static final String TYPE_BUSINESS = "עסק";
+
+    public GoogleMap mMap;
+
     public static Boolean isLogged = false;
     public static User currentUser = new User();
     FirebaseAuth currentAuth = FirebaseAuth.getInstance();

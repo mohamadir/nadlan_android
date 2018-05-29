@@ -59,6 +59,8 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0-RC0@aar'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.github.florent37:android-slidr:1.0.3'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     implementation files('libs/PhotoUtil.jar')
 
     apply plugin: 'announce'
