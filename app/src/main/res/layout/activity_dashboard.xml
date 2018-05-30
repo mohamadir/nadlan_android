@@ -65,75 +65,85 @@
         android:id="@+id/pointDetailCard"
         android:visibility="gone"
         android:layout_height="120dp">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/container">
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="10dp"
-        android:visibility="visible"
-        card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="9dp"
-        >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:orientation="horizontal"
-        android:weightSum="12"
-        android:background="@color/white"
-       >
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="match_parent"
-           android:orientation="vertical"
-           android:layout_weight="8">
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:gravity="right"
-               android:id="@+id/details_title_Tv"
-               android:textSize="19sp"
-               android:textColor="@color/green"
-               android:layout_margin="4dp"
-               android:textStyle="bold"
-               android:text="דירה 200 מטר , 2016"/>
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:gravity="right"
-               android:textSize="10sp"
-               android:textColor="@color/green"
-               android:id="@+id/details_desc_Tv"
-
-               android:layout_margin="4dp"
-               android:textStyle="bold"
-               android:text="רח' ירושליםדגכדגכדגכדגכדגכדגכדכדגכדגכ, ירושלים"/>
-       </LinearLayout>
-        <android.support.v7.widget.CardView
-            android:visibility="visible"
-            android:layout_alignParentBottom="true"
-            android:layout_width="0dp"
-            android:layout_weight="4"
-            android:layout_height="match_parent"
-            card_view:cardCornerRadius="2dp"
-            card_view:cardElevation="14dp">
-        <ImageView
-            android:id="@+id/imageview"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:src="@drawable/apartment"
-            />
-        </android.support.v7.widget.CardView>
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:onClick="openDetailsActivity"
+            android:orientation="vertical">
 
-    </LinearLayout>
-    </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:visibility="visible"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="9dp">
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="12">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/details_title_Tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:gravity="right"
+                            android:transitionName="title_transition"
+                            android:text="דירה 200 מטר , 2016"
+                            android:textColor="@color/green"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/details_desc_Tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:transitionName="desc_transition"
+                            android:gravity="right"
+                            android:text="רח' ירושליםדגכדגכדגכדגכדגכדגכדכדגכדגכ, ירושלים"
+
+                            android:textColor="@color/green"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_weight="4"
+                        android:visibility="visible"
+                        card_view:cardCornerRadius="2dp"
+                        card_view:cardElevation="14dp">
+
+                        <ImageView
+                            android:id="@+id/imageview"
+                            android:transitionName="image_transition"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/apartment" />
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -153,7 +163,6 @@
         android:visibility="visible"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-
         android:layout_height="match_parent">
         <View
             android:layout_width="40dp"
@@ -176,7 +185,32 @@
             android:onClick="addNewPointActivity"
             android:src="@drawable/add_apartment"
             />
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="20dp"
+            android:onClick="myApartmentsListActivity"
+            android:src="@drawable/list"
+            />
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:onClick="signOutClick"
+            android:src="@drawable/sign_out"
+            />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="90dp"
+        android:orientation="vertical"
+        android:layout_marginTop="60dp"
+        android:visibility="visible"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="match_parent">
 
-
+    </LinearLayout>
 </RelativeLayout>

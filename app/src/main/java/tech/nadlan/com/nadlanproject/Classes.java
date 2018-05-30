@@ -21,6 +21,7 @@ public class Classes {
 
     public static Boolean isLogged = false;
     public static User currentUser = new User();
+    public static RentPoint currentRp = new RentPoint();
     FirebaseAuth currentAuth = FirebaseAuth.getInstance();
     public static final String CONTENT_AUTHORITY = "br.com.mauker.materialsearchview.searchhistorydatabase";
 

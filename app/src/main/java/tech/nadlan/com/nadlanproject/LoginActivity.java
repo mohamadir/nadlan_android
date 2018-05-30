@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
+   // private CallbackManager callbackManager;
     private DatabaseReference userTable;
     List<User> usersList = new ArrayList<User>();
     EditText userNameEt,passwordEt;
@@ -48,7 +53,24 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
+//        final LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton.setReadPermissions("email","public_profile");
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Log.d(Classes.TAG,"facebook:success " + loginResult);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//
+//            }
+//        });
         userTable.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -84,6 +106,12 @@ public class LoginActivity extends AppCompatActivity {
         }
         doSomethingTest(userName,password);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+      //  callbackManager.onActivityResult(requestCode,resultCode,data);
     }
 
     public void doSomethingTest(String userName, String password){
