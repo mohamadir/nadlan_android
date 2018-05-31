@@ -101,9 +101,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public GoogleMap mMap;
     String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
     AutoCompleteTextView actv;
+    public String textSearch = "";
     Geocoder geocoder;
     List<Address> lstAdresses;
-    public String textSearch = "";
     static final int MAX_RESULT = 5;
     public TextView titleEt, descEt;
     public List<RentPoint> pointList;
@@ -127,7 +127,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchView.setIconifiedByDefault(false);
         searchView.onActionViewExpanded();
         searchView.setIconified(false);
-        searchView.setQueryHint("חפש דירה (למשל: ירושלים)");
+        searchView.setQueryHint("חפש עיר או כתובת");
         searchView.requestFocus();
 
         new Handler().postDelayed(new Runnable() {
@@ -300,7 +300,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 .title(pointList.get(i).getAddress()));
                     }
                 } else {
-                    if (!city.equals("no-value") && (city.contains(pointList.get(i).getCity()) || city.equals(pointList.get(i).getCity()))) {
+                    if (
+                            !city.equals("no-value") && (city.contains(pointList.get(i).getCity())
+                            || city.equals(pointList.get(i).getCity()))
+                            || ((city.toLowerCase().indexOf(pointList.get(i).getCity())) != -1)
+                            || ((city.toLowerCase().indexOf(pointList.get(i).getCity() +" " + pointList.get(i).getAddress())) != -1)
+                            || ((city.toLowerCase().indexOf(pointList.get(i).getAddress())) != -1)
+                            || city.equals(pointList.get(i).getAddress())
+                            || city.contains(pointList.get(i).getAddress())
+                            || city.contains(pointList.get(i).getCity() +" " + pointList.get(i).getAddress())
+
+
+                            ) {
                         Log.i(Classes.TAG,"in not no value");
 
                         LatLng coordinate = new LatLng(pointList.get(i).getLat(), pointList.get(i).getLon());

@@ -2,13 +2,19 @@ package tech.nadlan.com.nadlanproject;
 
 import android.*;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -37,6 +43,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -44,6 +51,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static tech.nadlan.com.nadlanproject.MapActivity.MAX_RESULT;
 
 public class AddRentPointActivity extends AppCompatActivity {
     public NiceSpinner typeSpinner;
@@ -54,8 +63,12 @@ public class AddRentPointActivity extends AppCompatActivity {
     public String[] types =  new String[]{"דירה", "מגרש" , "עסק"};
     public ImageView pointImage;
     public FirebaseAuth mAuth;
+    Double lat,lon;
     private DatabaseReference pointsTable = FirebaseDatabase.getInstance().getReference("rent_points");
     public String imagePath = "";
+    Geocoder geocoder;
+    List<Address> lstAdresses;
+    static final int MAX_RESULT = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,7 +256,9 @@ public class AddRentPointActivity extends AppCompatActivity {
     }
 
     public void addPoint(View view) {
-        uploadImage();
+        new    MyAsyncTask(AddRentPointActivity.this).execute();
+
+     //   uploadImage();
 
     }
 
@@ -260,7 +275,125 @@ public class AddRentPointActivity extends AppCompatActivity {
 
     }
 
-    private void setPointToList(String imagePath) {
+    AlertDialog.Builder addressesDialog;
+    private class MyAsyncTask extends AsyncTask<Object, Object, List<Address>> {
+        private ProgressDialog dialog;
+        private Context context;
+
+        public MyAsyncTask(Context context) {
+            this.context = context;
+        }
+
+        // method that return list of the addresses
+        private List<Address> searchAddresses() {
+            geocoder = new Geocoder(AddRentPointActivity.this);
+            try {
+                Log.i(Classes.TAG,cityEt.getText().toString() + " "+ addressEt.getText().toString());
+                return geocoder.getFromLocationName(cityEt.getText().toString() + " "+ addressEt.getText().toString(), MAX_RESULT);
+            } catch (IOException e) {
+            }
+            return null;
+        }
+
+        // on the background , go and get the addresses , and then cancle the loading dialog
+        @Override
+        protected List<Address> doInBackground(Object... params) {
+            return searchAddresses();
+        }
+
+        protected void onPreExecute() {
+            // loading dialog is waiting until the search is finished!
+            this.dialog = new ProgressDialog(context);
+            this.dialog.setMessage("מחפש מיקום...");
+            this.dialog.setCancelable(true);
+            this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    // cancel AsyncTask
+                    cancel(false);
+                }
+            });
+
+            this.dialog.show();
+
+        }
+
+        protected void onPostExecute(List<Address> result) {
+            lstAdresses = result;
+            if (lstAdresses == null) {
+                Toast.makeText(context, "לא נמצאה כתובת", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                return;
+
+            }
+            if (lstAdresses.size() > 1) {
+                // if the list size is more than 1 result , init a array from type charSequence in order to put them in the dialog
+                // and then if the user choosed any item , set the text into the textView of the target !
+
+                addressesDialog = new AlertDialog.Builder(AddRentPointActivity.this);
+                final CharSequence items[] = new CharSequence[lstAdresses.size()];
+                /*for (int i = 0; i < lstAdresses.size(); i++) {
+                    Address location = lstAdresses.get(i);
+                    for(int k=0;k<location.getMaxAddressLineIndex();k++) {
+                        if(location.getAddressLine(k)!=null)
+                        items[i] = location.getAddressLine(k) + " ";
+                    }
+                }*/
+                for(int i = 0; i< lstAdresses.size(); i++)
+                {
+                    Address location= lstAdresses.get(i);
+
+                    items[i]=location.getAddressLine(0)+" "+location.getAddressLine(1);
+                }
+                dialog.dismiss();
+
+
+
+                addressesDialog.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface d, int n) {
+                        Address location = lstAdresses.get(n);
+                        // if their is one Result so set it to the textview
+
+                        lon = lstAdresses.get(n).getLongitude();
+                        lat = lstAdresses.get(n).getLatitude();
+                        d.dismiss();
+                        uploadImage();
+
+                    }
+
+                });
+                addressesDialog.setNegativeButton("בחר", null);
+                addressesDialog.setTitle("בחר אחת מהכתובות");
+                addressesDialog.show();
+
+            } else if (lstAdresses.size() == 0) {
+
+                Log.i(Classes.TAG, "כתובת אינה חוקית!");
+                Toast.makeText(context, "לא נמצאה כתובת", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            } else {
+
+                Address location = lstAdresses.get(0);
+                // if their is one Result so set it to the textview
+                Log.i(Classes.TAG, "" + location.getAddressLine(0) + " " + location.getAddressLine(1));
+
+                Log.i(Classes.TAG, "Longtude:" + lstAdresses.get(0).getLongitude() + ", Latitude:" + lstAdresses.get(0).getLatitude());
+                lon = lstAdresses.get(0).getLongitude();
+                lat = lstAdresses.get(0).getLatitude();
+                dialog.dismiss();
+                uploadImage();
+
+
+            }
+            if(dialog.isShowing())
+                dialog.dismiss();
+        }
+    }
+
+        private void setPointToList(String imagePath) {
         String phone = phoneEt.getText().toString();
         String description = descriptionEt.getText().toString();
         int area = Integer.parseInt(areaEt.getText().toString());
@@ -273,7 +406,7 @@ public class AddRentPointActivity extends AppCompatActivity {
         Log.i(Classes.TAG,phone + ", "+description + ", "+area + ", "+city + ", "+address + ", "+type );
         String key =  pointsTable.child(mAuth.getUid()).push().getKey();
         //String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath
-        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(type,31.749997,35.2166658,city,address,phone,contact,description,area,establishYear, imagePath));
+        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(type,lat,lon,city,address,phone,contact,description,area,establishYear, imagePath));
         progress.dismiss();
         onBackPressed();
     }
