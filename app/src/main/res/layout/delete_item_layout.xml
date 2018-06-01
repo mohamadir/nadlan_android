@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="150dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="17sp"
+        android:text="האם ברצונך למחוק נקודה זו?"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="80dp"
+            android:background="@color/green"
+            android:layout_margin="30dp"
+            android:id="@+id/closeBt"
+            android:textColor="@color/white"
+            android:text="מחק"
+            android:layout_height="40dp" />
+        <Button
+            android:layout_width="80dp"
+            android:layout_margin="30dp"
+            android:text="בטל"
+            android:id="@+id/cancelBt"
+            android:background="@color/green"
+            android:textColor="@color/white"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package tech.nadlan.com.nadlanproject;
+package tech.nadlan.com.nadlanproject.Activities;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import tech.nadlan.com.nadlanproject.R;
 
 public class TestActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;

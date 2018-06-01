@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     android:orientation="vertical"
-    tools:context="tech.nadlan.com.nadlanproject.MainActivity">
+    tools:context="tech.nadlan.com.nadlanproject.Activities.MainActivity">
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context="tech.nadlan.com.nadlanproject.RegisterActivity">
+    tools:context="tech.nadlan.com.nadlanproject.Activities.RegisterActivity">
     <ProgressBar
         android:layout_width="50dp"
         android:layout_height="50dp"

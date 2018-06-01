@@ -1,4 +1,4 @@
-package tech.nadlan.com.nadlanproject;
+package tech.nadlan.com.nadlanproject.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,11 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tech.nadlan.com.nadlanproject.R;
+import tech.nadlan.com.nadlanproject.User;
 
 public class LoginActivity extends AppCompatActivity {
 

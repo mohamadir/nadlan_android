@@ -11,12 +11,23 @@ public class RentPoint {
     private int area,establishYear;
     private String photoPath;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
+
 
     public RentPoint() {
     }
 
-    public RentPoint(String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath) {
+    public RentPoint(String id,String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath) {
         this.type = type;
+        this.id = id;
         this.lat = lat;
         this.lon = lon;
         this.city = city;

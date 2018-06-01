@@ -1,44 +1,30 @@
-package tech.nadlan.com.nadlanproject;
+package tech.nadlan.com.nadlanproject.Activities;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
@@ -57,13 +43,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,22 +53,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
-import com.shitij.goyal.slidebutton.Utils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -94,9 +69,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import tech.nadlan.com.nadlanproject.Classes;
+import tech.nadlan.com.nadlanproject.R;
+import tech.nadlan.com.nadlanproject.RentPoint;
 
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, ValueEventListener {
     public static final String TAG = "DASHBOARD_MAP";
     public GoogleMap mMap;
     String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
@@ -119,7 +97,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         checkPlayServices();
+
         galleryPhoto = new GalleryPhoto(MapActivity.this);
+
         pointList = new ArrayList<RentPoint>();
         titleEt = (TextView) findViewById(R.id.details_title_Tv);
         descEt = (TextView) findViewById(R.id.details_desc_Tv);
@@ -182,6 +162,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     protected void onResume() {
         super.onResume();
+    //    points.addValueEventListener(this);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -191,6 +172,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     Dialog errorDialog;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("STATUS-LIFE","onPause");
+        points.removeEventListener(this);
+    }
 
     private boolean checkPlayServices() {
 
@@ -243,44 +231,30 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     public FirebaseAuth mAuth;
-
+    DatabaseReference points;
     @Override
     protected void onStart() {
         super.onStart();
-        final DatabaseReference points = FirebaseDatabase.getInstance().getReference("rent_points").child(mAuth.getUid()).getRef();
-        points.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
-                    RentPoint point = userSnapShot.getValue(RentPoint.class);
-                    pointList.add(point);
-                    Log.i("RentPoint", point.getLat() + "");
-                }
-
-                updateMapPoints("no-value");
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        Log.i("STATUS-LIFE","ONSTART");
+        points = FirebaseDatabase.getInstance().getReference("rent_points").child(mAuth.getUid()).getRef();
+        points.addValueEventListener(this);
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            // do your stuff
-        } else {
-            signInAnonymously();
-        }
+
     }
+
+
+
 
     private void updateMapPoints(String city) {
         Log.i(Classes.TAG,"update map poitns with query: "+city);
+        mMap.clear();
+
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         if (pointList.size() != 0) {
             for (int i = 0; i < pointList.size(); i++) {
                 if (city.equals("no-value")) {
                     Log.i(Classes.TAG,"in no-value");
+
                     LatLng coordinate = new LatLng(pointList.get(i).getLat(), pointList.get(i).getLon());
                     builder.include(coordinate);
                     if(pointList.get(i).getType().equals(Classes.TYPE_APARTMENT)) { // DERA
@@ -368,7 +342,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 resetMap();
             }
 
+        }else {
+       //     mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(	31.771959, 35.217018), 8));
+
+
         }
+
         //          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(computeCentroid(coordList), (float)9));
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
@@ -714,7 +694,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     public void addNewPointActivity(View view) {
-    startActivity(new Intent(MapActivity.this,AddRentPointActivity.class));
+        findViewById(R.id.pointDetailCard).setVisibility(View.GONE);
+        startActivity(new Intent(MapActivity.this,AddRentPointActivity.class));
     }
 
     public void closeDetails(View view) {
@@ -732,10 +713,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         intent.putExtra("title",titleEt.getText().toString());
         intent.putExtra("subtitle",descEt.getText().toString());
      //   ActivityOptionsCompat options= ActivityOptionsCompat.makeSceneTransitionAnimation(MapActivity.this,imageview, ViewCompat.getTransitionName(imageview));
+        findViewById(R.id.pointDetailCard).setVisibility(View.GONE);
         startActivity(intent,options.toBundle());
     }
 
     public void myApartmentsListActivity(View view) {
+        startActivity(new Intent(MapActivity.this,PintsListActivity.class));
     }
 
 
@@ -768,7 +751,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+
     public void signOutClick(View view) {
         showSignOutDialog();
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        pointList.clear();
+        for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+            RentPoint point = userSnapShot.getValue(RentPoint.class);
+            pointList.add(point);
+            Log.i("RentPoint", point.getLat() + "");
+        }
+        updateMapPoints("no-value");
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
     }
 }

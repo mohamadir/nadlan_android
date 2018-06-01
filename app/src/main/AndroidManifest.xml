@@ -30,7 +30,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".Activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />
@@ -44,18 +44,18 @@
             android:value="AIzaSyBEeQvjvz5SeeMfSHmDElKc1yiasDEECno" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MapActivity">
+        <activity android:name=".Activities.RegisterActivity" />
+        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name=".Activities.MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestActivity" />
-        <activity android:name=".AddRentPointActivity" />
-        <activity android:name=".PointDetailsActivity" />
+        <activity android:name=".Activities.TestActivity" />
+        <activity android:name=".Activities.AddRentPointActivity" />
+        <activity android:name=".Activities.PointDetailsActivity" />
         <!-- <meta-data android:name="com.facebook.sdk.ApplicationId" -->
         <!-- android:value="@string/facebook_app_id"/> -->
 
@@ -74,7 +74,7 @@
         <!-- <data android:scheme="@string/fb_login_protocol_scheme" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".PintsListActivity"></activity>
+        <activity android:name=".Activities.PintsListActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,5 @@
-package tech.nadlan.com.nadlanproject;
+package tech.nadlan.com.nadlanproject.Activities;
 
-import android.*;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,12 +8,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -26,11 +25,12 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.github.florent37.androidslidr.Slidr;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -51,8 +52,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static tech.nadlan.com.nadlanproject.MapActivity.MAX_RESULT;
+import tech.nadlan.com.nadlanproject.*;
+import tech.nadlan.com.nadlanproject.R;
 
 public class AddRentPointActivity extends AppCompatActivity {
     public NiceSpinner typeSpinner;
@@ -68,14 +69,20 @@ public class AddRentPointActivity extends AppCompatActivity {
     public String imagePath = "";
     Geocoder geocoder;
     List<Address> lstAdresses;
+    RadioButton manualRb,autoRb;
     static final int MAX_RESULT = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_rent_point);
+        setContentView(tech.nadlan.com.nadlanproject.R.layout.activity_add_rent_point);
         typeSpinner = (NiceSpinner) findViewById(R.id.typeSpinner);
+        manualRb = (RadioButton)findViewById(R.id.manualRb);
+        autoRb = (RadioButton)findViewById(R.id.autoRb);
         galleryPhoto = new GalleryPhoto(AddRentPointActivity.this);
         initializeViews();
+        setGps();
+        setRadioButtons();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddRentPointActivity.this,
                 android.R.layout.simple_spinner_item,types);
         mAuth = FirebaseAuth.getInstance();
@@ -88,6 +95,61 @@ public class AddRentPointActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setRadioButtons() {
+        manualRb.setChecked(false);
+        autoRb.setChecked(true);
+
+        autoRb.setChecked(true);
+        manualRb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                autoRb.setChecked(false);
+                manualRb.setChecked(true);
+                cityEt.setText("");
+                addressEt.setText("");
+            }
+        });
+
+        autoRb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                manualRb.setChecked(false);
+                autoRb.setChecked(true);
+                setGps();
+            }
+        });
+    }
+
+    private void setGps() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            setCurrentLocation();
+            Geocoder geocoderr;
+            List<Address> addressess;
+            geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                addressess = geocoder.getFromLocation(lat, lon, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                String address = addressess.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addressess.get(0).getLocality();
+                Log.i("GPSLOC-","city:"+city+",  address: "+address);
+                cityEt.setText(city);
+                addressEt.setText(address);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("GPSLOC-","fAILED to get address");
+
+            }
+
+
+
+        } else {
+
+            showGPSDisabledAlertToUser();
+        }
     }
 
     private void initializeViews() {
@@ -131,6 +193,11 @@ public class AddRentPointActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode ==  1){
+            setGps();
+            Toast.makeText(this, "gps is " + lat + ", "+ lon, Toast.LENGTH_SHORT).show();
+        }
         if (requestCode == Classes.GALLERY_REQUEST && resultCode == RESULT_OK
                 && null != data) {
             if (data == null) {
@@ -149,7 +216,16 @@ public class AddRentPointActivity extends AppCompatActivity {
                 ImageData = data;}
         }
     }
-  public   ProgressDialog progress;
+
+    private void setCurrentLocation() {
+        GPSTracker gps = new GPSTracker(this);
+        lat = gps.getLatitude();
+        lon = gps.getLongitude();
+        uploadImage();
+
+    }
+
+    public   ProgressDialog progress;
 
     public void uploadImage(){
         progress = new ProgressDialog(AddRentPointActivity.this);;
@@ -256,8 +332,16 @@ public class AddRentPointActivity extends AppCompatActivity {
     }
 
     public void addPoint(View view) {
-        new    MyAsyncTask(AddRentPointActivity.this).execute();
+        if(manualRb.isChecked()) {
+            new MyAsyncTask(AddRentPointActivity.this).execute();
+        }else {
+            if(lat==0 || lon == 0){
+                Toast.makeText(this, "לא הצלחנו לזהות מיקום, אנא רשום ידנית את הכתובת", Toast.LENGTH_SHORT).show();
+            }else {
+                setCurrentLocation();
 
+            }
+        }
      //   uploadImage();
 
     }
@@ -406,8 +490,28 @@ public class AddRentPointActivity extends AppCompatActivity {
         Log.i(Classes.TAG,phone + ", "+description + ", "+area + ", "+city + ", "+address + ", "+type );
         String key =  pointsTable.child(mAuth.getUid()).push().getKey();
         //String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath
-        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(type,lat,lon,city,address,phone,contact,description,area,establishYear, imagePath));
+        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(key,type,lat,lon,city,address,phone,contact,description,area,establishYear, imagePath));
         progress.dismiss();
         onBackPressed();
+    }
+
+    private void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("הפעל GPS")
+                .setCancelable(false)
+                .setPositiveButton("הגדרות",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("בטל",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }

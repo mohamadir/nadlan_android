@@ -1,9 +1,10 @@
-package tech.nadlan.com.nadlanproject;
+package tech.nadlan.com.nadlanproject.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import tech.nadlan.com.nadlanproject.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
