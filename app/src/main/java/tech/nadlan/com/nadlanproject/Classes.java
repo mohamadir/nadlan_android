@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
+import tech.nadlan.com.nadlanproject.Models.RentPoint;
+import tech.nadlan.com.nadlanproject.Models.User;
+
 /**
  * Created by snapmac on 5/25/18.
  */
@@ -13,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Classes {
     public static final String TAG = "MOHAMED-LOG";
     public static final int GALLERY_REQUEST = 22131;
+    public static String currentEmail = "";
+    public static String UPLOAD_SERVER = "https://api.snapgroup.co.il";
     public static final String TYPE_APARTMENT = "דירה";
     public static final String TYPE_LAND = "מגרש";
     public static final String TYPE_BUSINESS = "עסק";

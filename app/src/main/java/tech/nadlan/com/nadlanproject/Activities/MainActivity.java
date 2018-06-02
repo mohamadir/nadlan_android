@@ -30,7 +30,7 @@ import java.util.Calendar;
 import in.shadowfax.proswipebutton.ProSwipeButton;
 import tech.nadlan.com.nadlanproject.Classes;
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.User;
+import tech.nadlan.com.nadlanproject.Models.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 }, 500);
                 proSwipeBtn.showResultIcon(false);
                 if(Classes.isLogged){
+                    Classes.currentEmail = mAuth.getInstance().getCurrentUser().getEmail();
                     startActivity(new Intent(MainActivity.this,MapActivity.class));
 
                 }

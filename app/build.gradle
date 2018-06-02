@@ -67,12 +67,14 @@ dependencies {
     compile 'com.github.florent37:android-slidr:1.0.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.sromku:simple-fb:4.1.1'
-
+    compile 'com.github.mreram:ShowCaseView:1.0.5'
+    compile 'com.droidninja:filepicker:2.1.5'
     compile files('libs/PhotoUtil.jar')
 
     apply plugin: 'announce'
 
 }
+
 
 
 

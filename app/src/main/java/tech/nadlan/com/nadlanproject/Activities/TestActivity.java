@@ -23,24 +23,31 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.createUserWithEmailAndPassword("mohamdib@gmail.com", "123456")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-
-                        }
-
-
-                    }
-                });
+        //                final StorageReference filepath = storage.child("Photos").child(uri.getLastPathSegment());
+//                filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                        Toast.makeText(MapActivity.this, "Success upload ", Toast.LENGTH_SHORT).show();
+////                        Log.i(TAG,taskSnapshot.getdown);
+//                    }
+//                }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MapActivity.this, "Failed upload "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+//                        Log.i(TAG,e.getMessage().toString());
+//
+//                    }
+//                });
+//
+//                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                imageview.setImageBitmap(bitmap);
 
     }
     @Override

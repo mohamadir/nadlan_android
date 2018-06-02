@@ -22,7 +22,7 @@ import java.util.List;
 
 import tech.nadlan.com.nadlanproject.Classes;
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.User;
+import tech.nadlan.com.nadlanproject.Models.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -81,7 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     userName,
                                     phone
                             );
-
+                            Classes.currentUser = user;
+                            Classes.currentEmail = email;
                             FirebaseDatabase.getInstance().getReference("users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {

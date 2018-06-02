@@ -1,8 +1,6 @@
 package tech.nadlan.com.nadlanproject.Activities;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,14 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,13 +26,14 @@ import java.util.List;
 import tech.nadlan.com.nadlanproject.Adapters.PointsListAdapter;
 import tech.nadlan.com.nadlanproject.Classes;
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.RentPoint;
+import tech.nadlan.com.nadlanproject.Models.RentPoint;
 
 public class PintsListActivity extends AppCompatActivity {
     ListView pointsListView;
     public List<RentPoint> pointList;
-    public FirebaseAuth mAuth;
     PointsListAdapter adapter;
+
+    public FirebaseAuth mAuth;
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,6 +76,7 @@ public class PintsListActivity extends AppCompatActivity {
 
             }
         });*/
+
         points.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

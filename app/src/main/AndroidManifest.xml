@@ -41,8 +41,8 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBEeQvjvz5SeeMfSHmDElKc1yiasDEECno" />
-
+            android:value="AIzaSyDgUMmaTlE3uCFnNgpPWq2Cyalws1zQraI" />
+<!--AIzaSyBEeQvjvz5SeeMfSHmDElKc1yiasDEECno-->
         <activity
             android:name=".Activities.MainActivity"
             android:launchMode="singleTask" />
@@ -74,7 +74,8 @@
         <!-- <data android:scheme="@string/fb_login_protocol_scheme" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".Activities.PintsListActivity"></activity>
+        <activity android:name=".Activities.PintsListActivity" />
+        <activity android:name=".Activities.MyFilesActivity"></activity>
     </application>
 
 </manifest>

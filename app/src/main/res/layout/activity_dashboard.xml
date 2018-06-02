@@ -182,16 +182,37 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="20dp"
+            android:id="@+id/addPointIv"
             android:onClick="addNewPointActivity"
             android:src="@drawable/add_apartment"
             />
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:id="@+id/pointsListIv"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="20dp"
             android:onClick="myApartmentsListActivity"
             android:src="@drawable/list"
+            />
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:onClick="myFilesClick"
+            android:id="@+id/my_filesIv"
+            android:src="@drawable/my_files_icon"
+            />
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:onClick="myProfileClick"
+            android:src="@drawable/my_profile"
             />
         <ImageView
             android:layout_width="45dp"

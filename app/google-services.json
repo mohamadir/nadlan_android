@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "731023010239-2tqso5ev5p99u3cr184gg5q82kjqtdg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.nadlan.com.nadlanproject",
+            "certificate_hash": "877594e8487da18cd2797a2436263ca577f688a7"
+          }
+        },
+        {
           "client_id": "731023010239-vendfut90ufdtmg981l6nvp6hsd1nh5l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -41,6 +49,7 @@
       ],
       "api_key": [
         {
+//           AIzaSyAnC7Kffw6-E-GXw9UhvQjK1zkTplx0EdQ
           "current_key": "AIzaSyAnC7Kffw6-E-GXw9UhvQjK1zkTplx0EdQ"
         }
       ],

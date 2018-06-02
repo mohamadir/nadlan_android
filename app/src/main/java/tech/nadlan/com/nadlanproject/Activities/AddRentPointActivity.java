@@ -53,6 +53,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import tech.nadlan.com.nadlanproject.*;
+import tech.nadlan.com.nadlanproject.Models.RentPoint;
 import tech.nadlan.com.nadlanproject.R;
 
 public class AddRentPointActivity extends AppCompatActivity {

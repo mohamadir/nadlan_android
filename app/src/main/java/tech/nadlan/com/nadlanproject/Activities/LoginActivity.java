@@ -25,8 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import tech.nadlan.com.nadlanproject.Classes;
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.User;
+import tech.nadlan.com.nadlanproject.Models.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -112,10 +113,11 @@ public class LoginActivity extends AppCompatActivity {
       //  callbackManager.onActivityResult(requestCode,resultCode,data);
     }
 
-    public void doSomethingTest(String userName, String password){
+    public void doSomethingTest(final String userName, String password){
         final ProgressDialog progress;
         progress = ProgressDialog.show(this, "",
                 "מתחבר..", true);
+        Classes.currentEmail = userName;
         mAuth.signInWithEmailAndPassword(userName, password)
                 .addOnCompleteListener(LoginActivity. this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -124,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
 
                             progress.dismiss();
-
                             startActivity(new Intent(LoginActivity.this,MapActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.

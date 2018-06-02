@@ -1,12 +1,10 @@
 package tech.nadlan.com.nadlanproject.Adapters;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.RentPoint;
+import tech.nadlan.com.nadlanproject.Models.RentPoint;
 
 /**
  * Created by מוחמד on 01/06/2018.
@@ -61,7 +59,6 @@ public class PointsListAdapter extends BaseAdapter {
             ImageView pointImageView = (ImageView) convertView.findViewById(R.id.imageview);
             titleEt.setText(pointList.get(position).getType() + " " + pointList.get(position).getArea() +" מ\"ר" +", "+pointList.get(position).getEstablishYear());
             descEt.setText(pointList.get(position).getAddress() +", "+pointList.get(position).getCity());
-
             Picasso.with(context).load(pointList.get(position).getPhotoPath()).into(pointImageView);
         }
 

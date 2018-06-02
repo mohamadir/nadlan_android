@@ -4,14 +4,16 @@ import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -45,7 +47,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,9 +70,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 import tech.nadlan.com.nadlanproject.Classes;
 import tech.nadlan.com.nadlanproject.R;
-import tech.nadlan.com.nadlanproject.RentPoint;
+import tech.nadlan.com.nadlanproject.Models.RentPoint;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, ValueEventListener {
@@ -109,7 +111,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchView.setIconified(false);
         searchView.setQueryHint("חפש עיר או כתובת");
         searchView.requestFocus();
-
+        tourGuidIfNotFirstTime();
+        //setTourGuide();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -146,6 +149,95 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+    }
+
+    private void tourGuidIfNotFirstTime() {
+        SharedPreferences prefs = getSharedPreferences("TourGuide", MODE_PRIVATE);
+        Boolean isFirstTime = prefs.getBoolean("firstTime", true);
+
+        if(isFirstTime){
+            setTourGuide();
+            SharedPreferences.Editor edit = getSharedPreferences("TourGuide", MODE_PRIVATE).edit();
+            edit.putBoolean("firstTime", false);
+            edit.commit();
+        }
+
+    }
+
+    private void setTourGuide() {
+        new GuideView.Builder(this)
+                .setTitle("הוספת נקודה חדשה")
+                .setContentText("ניתן להוסיף דירה או עסק או מגרש")
+                .setGravity(GuideView.Gravity.auto) //optional
+                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                .setTargetView(findViewById(R.id.addPointIv))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setGuideListener(new GuideView.GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+                        new GuideView.Builder(MapActivity.this)
+                                .setTitle("רשימת נקודות שלי")
+                                .setContentText("ניתן לערוך או למחוק את הנקודות שלי")
+                                .setGravity(GuideView.Gravity.auto) //optional
+                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                .setTargetView(findViewById(R.id.pointsListIv))
+                                .setContentTextSize(12)//optional
+                                .setGuideListener(new GuideView.GuideListener() {
+                                    @Override
+                                    public void onDismiss(View view) {
+                                        new GuideView.Builder(MapActivity.this)
+                                        .setTitle("ניהול קבצים")
+                                                .setContentText("דף לניהול מסמכים, כולל העלאות והורדה .")
+                                                .setGravity(GuideView.Gravity.auto) //optional
+                                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                .setTargetView(findViewById(R.id.my_filesIv))
+                                                .setGuideListener(new GuideView.GuideListener() {
+                                                    @Override
+                                                    public void onDismiss(View view) {
+                                                        new GuideView.Builder(MapActivity.this)
+                                                                .setTitle("חיפוש נקודות")
+                                                                .setContentText("ניתן לחפש לפי כתובת או עיר")
+                                                                .setGravity(GuideView.Gravity.auto) //optional
+                                                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                                .setTargetView(findViewById(R.id.cardView2))
+                                                                .setContentTextSize(12)//optional
+                                                                .setTitleTextSize(14)//optional
+                                                                .setGuideListener(new GuideView.GuideListener() {
+                                                                    @Override
+                                                                    public void onDismiss(View view) {
+                                                                        new GuideView.Builder(MapActivity.this)
+                                                                                .setContentText("כעת תוכל להנות מהאפליקציה")
+                                                                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                                                .setTargetView(findViewById(R.id.container))
+                                                                                .setGravity(GuideView.Gravity.center)
+                                                                                .setContentTextSize(20)//optional
+                                                                                .setTitleTextSize(14)//optional
+                                                                                .build()
+                                                                                .show();
+                                                                    }
+                                                                })
+                                                                .build()
+                                                                .show();
+                                                    }
+                                                })
+                                                .setContentTextSize(12)//optional
+                                                .setTitleTextSize(14)//optional
+
+                                                .build()
+                                                .show();
+                                    }
+                                })
+                                .setTitleTextSize(14)//optional
+                                .build()
+                                .show();
+
+                        //cardView2
+                    }
+                })
+                .build()
+                .show();
     }
 
     @Override
@@ -178,6 +270,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onPause();
         Log.i("STATUS-LIFE","onPause");
         points.removeEventListener(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        updateMapPoints("no-value");
     }
 
     private boolean checkPlayServices() {
@@ -282,9 +380,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             || ((city.toLowerCase().indexOf(pointList.get(i).getAddress())) != -1)
                             || city.equals(pointList.get(i).getAddress())
                             || city.contains(pointList.get(i).getAddress())
+                            || pointList.get(i).getAddress().contains(city)
                             || city.contains(pointList.get(i).getCity() +" " + pointList.get(i).getAddress())
-
-
+                            || (pointList.get(i).getCity() +" " + pointList.get(i).getAddress()).toString().contains(city)
                             ) {
                         Log.i(Classes.TAG,"in not no value");
 
@@ -770,5 +868,33 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
 
+    }
+
+    public void myProfileClick(View view) {
+        final View closeDialog = LayoutInflater.from(MapActivity.this).inflate(R.layout.profile_layout, null);
+        final TextView userNameTv = (TextView) closeDialog.findViewById(R.id.userNameTv);
+        final TextView emailTv = (TextView) closeDialog.findViewById(R.id.emailTv);
+        final TextView signoutTv = (TextView) closeDialog.findViewById(R.id.signoutTv);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setView(closeDialog);
+
+        final android.support.v7.app.AlertDialog dialog4 = builder.create();
+        dialog4.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialog4.show();
+        signoutTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSignOutDialog();
+                dialog4.dismiss();
+
+            }
+        });
+        emailTv.setText(Classes.currentEmail);
+        userNameTv.setText(Classes.currentUser.getUsername());
+    }
+
+    public void myFilesClick(View view) {
+        startActivity(new Intent(MapActivity.this,MyFilesActivity.class));
     }
 }
