@@ -31,9 +31,16 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
 
 import org.angmarch.views.NiceSpinner;
@@ -43,6 +50,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -203,8 +214,9 @@ public class AddRentPointActivity extends AppCompatActivity {
                 && null != data) {
             if (data == null) {
                 return;
-            }else {
-                Uri uri = data.getData();
+            } else {
+                ImageData = data;
+                Uri uri = ImageData.getData();
                 galleryPhoto.setPhotoUri(uri);
                 InputStream inputStream = null;
                 try {
@@ -214,7 +226,8 @@ public class AddRentPointActivity extends AppCompatActivity {
                 }
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 pointImage.setImageBitmap(bitmap);
-                ImageData = data;}
+                ImageData = data;
+            }
         }
     }
 
@@ -235,95 +248,55 @@ public class AddRentPointActivity extends AppCompatActivity {
             return;
         }
         try {
-        progress.show();
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-
-
-                    String photoPath = galleryPhoto.getPath();;
-
-                    // Log.i("ResultAccount",photoPath);
-
-                    File f = new File(photoPath);
-                    String content_type = getMimeType(f.getPath().replaceAll(" ", "%20"));
-
-                    String file_path = f.getAbsolutePath().replaceAll(" ", "").toString();
-                    Log.i("ResultAccount", "myfiles - " + file_path);
-
-                    OkHttpClient client = new OkHttpClient();
-                    RequestBody file_body = RequestBody.create(MediaType.parse(content_type), f);
-
-                    RequestBody request_body = new MultipartBody.Builder()
-                            .setType(MultipartBody.FORM)
-                            .addFormDataPart("type", content_type)
-                            .addFormDataPart("single_image", file_path.substring(file_path.lastIndexOf("/") + 1), file_body)
-                            .build();
-                    String id_user2 = "74";
-
-                    Request request = new Request.Builder()
-                            .url("https://api.snapgroup.co.il/api/upload_single_image/Member/74/gallery")
-                            .post(request_body)
-                            .build();
-
-                    try {
-                        Response response = client.newCall(request).execute();
-                        String jsonData = response.body().string();
-                        JSONObject Jobject = new JSONObject(jsonData);
-
-                        JSONObject imageObj=Jobject.getJSONObject("image");
-                        imagePath= imageObj.getString("path");
-                        Log.i(Classes.TAG, "SUCCESS UPLOAD "+imagePath);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setPointToList("https://api.snapgroup.co.il"+imagePath);
+            progress.show();
+            final Uri uri = ImageData.getData();
+            final StorageReference sotrage = FirebaseStorage.getInstance().getReference();
+            final Date currentTime = Calendar.getInstance().getTime();
+            final StorageReference filepath = sotrage.child("Photos").child(currentTime.toString() + uri.getLastPathSegment());
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                    sotrage.child("Photos/"+currentTime.toString()+uri.getLastPathSegment()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            try {
+                                final String path =  new URL(uri.toString()).toString();
+                                setPointToList(path);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                                if(progress.isShowing())
+                                    progress.dismiss();
                             }
-                        });
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Error : " + response);
+                            /// The string(file link) that you need
                         }
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.i("ResultAccount", e.getMessage());
-
-                    }
-                       /* SharedPreferences.Editor edit = getSharedPreferences("filesRequestSP", MODE_PRIVATE).edit();
-                        edit.putString("finish", "Yes");
-                        edit.commit();*/
-                    //TODO
-
-
-                } catch (Exception e) {
-                    progress.dismiss();
-                    Log.i("ResultAccount", "second catch " + e.getMessage());
-                    final String message = e.getMessage().toString().replaceAll(" ", "").replaceAll("\n", "");
-                    if (progress != null) {
-                        progress.dismiss();
-                        AddRentPointActivity.this.runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(AddRentPointActivity.this, "Cannot upload\n Please trye another file!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                            Toast.makeText(AddRentPointActivity.this, "אירעה בעיה בהעלאה! נסה שוב", Toast.LENGTH_SHORT).show();
+                            if(progress.isShowing())
+                                progress.dismiss();
+                        }
+                    });
+                    Toast.makeText(AddRentPointActivity.this, "Success upload ", Toast.LENGTH_SHORT).show();
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AddRentPointActivity.this, "Failed upload " + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    if(progress.isShowing())
+                        progress.dismiss();
+                }
+            });
 
-            }
-
-        });
 
 
-        t.start();
-
-    } catch (Exception e) {
-        Log.i(Classes.TAG,e.getMessage());
-        e.printStackTrace();
-    }
+        } catch (Exception e) {
+            Log.i(Classes.TAG,e.getMessage());
+            if(progress.isShowing())
+                progress.dismiss();
+            e.printStackTrace();
+        }
     }
     private String getMimeType(String path) {
 
@@ -479,7 +452,9 @@ public class AddRentPointActivity extends AppCompatActivity {
     }
 
         private void setPointToList(String imagePath) {
-        String phone = phoneEt.getText().toString();
+            Log.i(Classes.TAG,"in set point to list" );
+
+            String phone = phoneEt.getText().toString();
         String description = descriptionEt.getText().toString();
         int area = Integer.parseInt(areaEt.getText().toString());
         String city = cityEt.getText().toString();
