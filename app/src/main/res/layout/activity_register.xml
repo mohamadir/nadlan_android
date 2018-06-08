@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context="tech.nadlan.com.nadlanproject.RegisterActivity">
+    tools:context="tech.nadlan.com.nadlanproject.Activities.RegisterActivity">
     <ProgressBar
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -109,7 +109,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:elevation="0dp"
                     android:gravity="right"
-                    android:hint=" שם משתמש"
+                    android:hint=" שם מלא"
                     android:paddingLeft="5dp"
                     android:paddingStart="5dp"
                     android:textColorHint="#aaa"
@@ -174,6 +174,7 @@
             android:layout_width="260dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
+            android:visibility="gone"
             android:weightSum="10"
             android:orientation="horizontal">
             <org.angmarch.views.NiceSpinner
@@ -188,7 +189,7 @@
 
                 />
             <org.angmarch.views.NiceSpinner
-                android:id="@+id/nice_spinner"
+                android:id="@+id/nice_spinner2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"

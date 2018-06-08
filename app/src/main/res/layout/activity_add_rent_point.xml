@@ -7,7 +7,7 @@
     android:layout_weight="30"
     android:background="@drawable/bg"
     android:layout_height="match_parent"
-    tools:context="tech.nadlan.com.nadlanproject.AddRentPointActivity">
+    tools:context="tech.nadlan.com.nadlanproject.Activities.AddRentPointActivity">
     <ImageView
         android:layout_width="100dp"
         android:layout_alignParentLeft="true"
@@ -69,27 +69,49 @@
                 app:cardBackgroundColor="#fff"
                 android:visibility="visible"
                 app:cardCornerRadius="0dp">
-
                 <EditText
-                    android:id="@+id/username_et"
+                    android:id="@+id/areaEt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:hint="שטח במטרים"
-
-                    android:paddingLeft="5dp"
-                    android:inputType="numberDecimal"
                     android:backgroundTint="@android:color/transparent"
-                    android:paddingStart="5dp"
-                    android:textColorHint="#aaa"
+
                     android:elevation="0dp"
                     android:gravity="right"
+                    android:hint="שטח במטרים"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:textColorHint="#aaa"
                     android:textSize="15dp" />
-
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="40dp"
+            android:layout_height="wrap_content">
 
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:text="מיקום ידני"
+                android:buttonTint="@color/green"
+                android:layoutDirection="rtl"
+                android:id="@+id/manualRb"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:layoutDirection="rtl"
+                android:id="@+id/autoRb"
+                android:buttonTint="@color/green"
+                android:text="מיקום נוכחי"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -103,23 +125,23 @@
             android:layout_marginTop="15dp"
             android:visibility="visible"
             app:cardCornerRadius="0dp">
-
             <EditText
-                android:id="@+id/username_et"
+                android:id="@+id/cityEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:hint="עיר"
-                android:paddingLeft="5dp"
-                android:inputType="numberDecimal"
                 android:backgroundTint="@android:color/transparent"
-                android:paddingStart="5dp"
-                android:textColorHint="#aaa"
                 android:elevation="0dp"
                 android:gravity="right"
+                android:hint="עיר"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
                 android:textSize="15dp" />
 
+
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -135,19 +157,20 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/username_et"
+                android:id="@+id/addressEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="כתובת"
                 android:paddingLeft="5dp"
-                android:inputType="numberDecimal"
                 android:backgroundTint="@android:color/transparent"
                 android:paddingStart="5dp"
                 android:textColorHint="#aaa"
                 android:elevation="0dp"
                 android:gravity="right"
                 android:textSize="15dp" />
+
+
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -165,19 +188,52 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/username_et"
+                android:id="@+id/establishYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="שנת בנייה"
+                android:inputType="number"
+                android:maxLength="4"
+                android:paddingLeft="5dp"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingStart="5dp"
+                android:textColorHint="#aaa"
+                android:elevation="0dp"
+                android:gravity="right"
+                android:textSize="15dp" />
+
+
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="40dp"
+            app:cardElevation="7dp"
+            android:background="#fff"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:cardBackgroundColor="#fff"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:cardCornerRadius="0dp">
+
+            <EditText
+                android:id="@+id/contactEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="איש קשר"
                 android:paddingLeft="5dp"
-                android:inputType="numberDecimal"
                 android:backgroundTint="@android:color/transparent"
                 android:paddingStart="5dp"
                 android:textColorHint="#aaa"
                 android:elevation="0dp"
                 android:gravity="right"
                 android:textSize="15dp" />
+
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -195,7 +251,7 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/username_et"
+                android:id="@+id/phoneEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -225,13 +281,12 @@
             app:cardCornerRadius="0dp">
 
             <EditText
-                android:id="@+id/username_et"
+                android:id="@+id/desctiptionEt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:hint="הערות"
                 android:paddingLeft="5dp"
-                android:inputType="numberDecimal"
                 android:backgroundTint="@android:color/transparent"
                 android:paddingStart="5dp"
                 android:textColorHint="#aaa"
@@ -239,12 +294,15 @@
                 android:gravity="right"
                 android:textSize="15dp" />
 
+
+
         </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:onClick="pickImage"
            android:orientation="vertical"
             android:layout_gravity="center"
             >
@@ -256,6 +314,7 @@
                 android:text="הוסף תמונה"/>
             <ImageView
                 android:layout_width="100dp"
+                android:id="@+id/pointImage"
                 android:src="@drawable/image_place_holder"
                 android:layout_height="100dp" />
 
@@ -273,6 +332,7 @@
         android:textColor="@color/white"
         android:text="הוסף"
         android:textSize="20dp"
+        android:onClick="addPoint"
         android:layout_margin="30dp"
         android:layout_gravity="center"
         android:background="@color/green"

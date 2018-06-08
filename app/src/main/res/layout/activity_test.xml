@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tech.nadlan.com.nadlanproject.TestActivity">
+    tools:context="tech.nadlan.com.nadlanproject.Activities.TestActivity">
 
 </android.support.constraint.ConstraintLayout>

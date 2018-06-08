@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/transparent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_margin="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="300dp">
+
+
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:orientation="vertical"
+        android:background="@drawable/circle"
+        android:layout_height="300dp">
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="300dp">
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/default_user" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:id="@+id/nameOfGroup"
+                    android:layout_marginTop="10dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/userNameTv"
+                    android:gravity="center"
+                    android:textColor="@color/Gray"
+                    android:text="My User Name"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:id="@+id/emailTv"
+                    android:text="my email"
+                    android:layout_marginTop="30dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/signoutTv"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/green"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="יציאה"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

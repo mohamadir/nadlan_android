@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    tools:context="tech.nadlan.com.nadlanproject.Activities.PointDetailsActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl"
+                android:weightSum="10"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="תאריך הוספה 24.9.2017"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start"
+                    android:onClick="shareClick"
+                    android:src="@drawable/share"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/dark_gray"></View>
+
+            <TextView
+                android:id="@+id/title_Tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:gravity="right"
+                android:transitionName="title_transition"
+                android:text="דירה 200 מטר , 2016"
+                android:textColor="@color/green"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subtitle_Tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginRight="10dp"
+                android:transitionName="desc_transition"
+                android:layout_marginTop="7dp"
+                android:text="רח' שדרות ירושלים, ירושלים"
+                android:textColor="@color/green"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:transitionName="image_transition"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/apartment" />
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+
+                android:visibility="visible"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="9dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:weightSum="12">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/descriptionTv"
+                        android:text="אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינת אחלה דירה מצויינתויינת אחלה דירה מצויינת "/>
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:layoutDirection="rtl"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="25dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:src="@drawable/contact"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textStyle="bold"
+                    android:textSize="19dp"
+                    android:layout_height="wrap_content"
+                    android:text="איש קשר: "/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:id="@+id/contactTv"
+                    android:textSize="19dp"
+                    android:layout_height="wrap_content"
+                    android:text="יצחק"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:layoutDirection="rtl"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="25dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="23dp"
+                    android:src="@drawable/contact_phone"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textStyle="bold"
+                    android:textSize="19dp"
+                    android:layout_height="wrap_content"
+                    android:text="מס' טלפון: "/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:id="@+id/phoneTv"
+                    android:textSize="19dp"
+                    android:layout_height="wrap_content"
+                    android:text="05233254125"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
+
+
+
