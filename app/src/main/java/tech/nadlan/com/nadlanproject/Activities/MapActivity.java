@@ -809,7 +809,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(MapActivity.this, p1, p2, p3);
         intent.putExtra("title",titleEt.getText().toString());
-        intent.putExtra("subtitle",descEt.getText().toString());
+        intent.putExtra("subtitlesubtitle",descEt.getText().toString());
      //   ActivityOptionsCompat options= ActivityOptionsCompat.makeSceneTransitionAnimation(MapActivity.this,imageview, ViewCompat.getTransitionName(imageview));
         findViewById(R.id.pointDetailCard).setVisibility(View.GONE);
         startActivity(intent,options.toBundle());
