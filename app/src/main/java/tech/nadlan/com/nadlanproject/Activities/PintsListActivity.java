@@ -1,5 +1,6 @@
 package tech.nadlan.com.nadlanproject.Activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -104,10 +105,21 @@ public class PintsListActivity extends AppCompatActivity {
         pointList = new ArrayList<RentPoint>();
 
         pointsListView = (ListView) findViewById(R.id.points_listView);
+        pointsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showLeaveDialog(position);
+                return true;
+            }
+        });
+
         pointsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showLeaveDialog(position);
+                Classes.currentRp = pointList.get(position);
+                startActivity(new Intent(PintsListActivity.this,PointDetailsActivity.class)
+                        .putExtra("title",pointList.get(position).getType() + " " + pointList.get(position).getArea() +" מ\"ר" +", "+pointList.get(position).getEstablishYear())
+                        .putExtra("subtitle",pointList.get(position).getAddress() +", "+pointList.get(position).getCity()));
             }
         });
 

@@ -179,14 +179,13 @@ public class AddRentPointActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void pickImage(View view){
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             startActivityForResult(galleryPhoto.openGalleryIntent(), Classes.GALLERY_REQUEST);
 
         }else
         {
             Log.i("perAsk","in else");
-            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         }
 
     }
@@ -466,7 +465,7 @@ public class AddRentPointActivity extends AppCompatActivity {
         Log.i(Classes.TAG,phone + ", "+description + ", "+area + ", "+city + ", "+address + ", "+type );
         String key =  pointsTable.child(mAuth.getUid()).push().getKey();
         //String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath
-        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(key,type,lat,lon,city,address,phone,contact,description,area,establishYear, imagePath));
+        pointsTable.child(mAuth.getUid()).child(key).setValue(new RentPoint(key,type,lat,lon,city,address,phone,contact,description,area,establishYear, imagePath,null));
         progress.dismiss();
         onBackPressed();
     }

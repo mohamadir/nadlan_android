@@ -11,6 +11,15 @@ public class RentPoint {
     private int area,establishYear;
     private String photoPath;
 
+    public FileMedia getPoint_file() {
+        return point_file;
+    }
+
+    public void setPoint_file(FileMedia point_file) {
+        this.point_file = point_file;
+    }
+
+    private FileMedia point_file;
     public String getId() {
         return id;
     }
@@ -23,9 +32,10 @@ public class RentPoint {
 
 
     public RentPoint() {
+
     }
 
-    public RentPoint(String id,String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath) {
+    public RentPoint(String id,String type, Double lat, Double lon, String city, String address, String phone, String ownerName, String description, int area, int establishYear, String photoPath,FileMedia point_file) {
         this.type = type;
         this.id = id;
         this.lat = lat;
@@ -33,6 +43,7 @@ public class RentPoint {
         this.city = city;
         this.address = address;
         this.phone = phone;
+        this.point_file = point_file;
         this.ownerName = ownerName;
         this.description = description;
         this.area = area;

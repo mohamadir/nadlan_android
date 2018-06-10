@@ -139,8 +139,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i("FIREBSOSH", "signInWithEmail:failure" + e.getMessage());
-
-                Toast.makeText(LoginActivity.this, "אחד או יותר מהפרטים אינם נכונים", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this,TestActivity.class).putExtra("error",e.getMessage()));
+             //   Toast.makeText(LoginActivity.this, "אחד או יותר מהפרטים אינם נכונים", Toast.LENGTH_SHORT).show();
                 progress.dismiss();
 
             }
