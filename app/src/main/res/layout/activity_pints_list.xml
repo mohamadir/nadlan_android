@@ -21,7 +21,15 @@
         android:text="רשימת הנקודות שלי"
         android:gravity="center"
         android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_weight="3"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="* לחץ לחיצה ארוכה כדי למחוק פריט"
+        android:gravity="right"
+        android:textSize="14sp"
+        android:layout_weight="1"/>
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/points_listView"

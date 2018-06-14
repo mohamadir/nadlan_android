@@ -336,7 +336,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Log.i("STATUS-LIFE","ONSTART");
         points = FirebaseDatabase.getInstance().getReference("rent_points").child(mAuth.getUid()).getRef();
         points.addValueEventListener(this);
+
         FirebaseUser user = mAuth.getCurrentUser();
+
 
     }
 
@@ -862,7 +864,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             pointList.add(point);
             Log.i("RentPoint", point.getLat() + "");
         }
-        updateMapPoints("no-value");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateMapPoints("no-value");
+            }
+        }, 500);
     }
 
     @Override
